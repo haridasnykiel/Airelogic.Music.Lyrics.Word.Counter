@@ -1,5 +1,18 @@
 ﻿@page "/"
+@using Music.Lyrics.Word.Counter.Services
 
-<h1>Find Artists Average Song Word Count</h1>
+<h3>Find Artists Average Song Word Count</h3>
 
 Welcome to your new app.
+
+<NavLink class="nav-link" href="" @onclick="GetData" >
+    Find Artists
+</NavLink>
+
+@code {
+    private MusicApiClient client = new MusicApiClient();
+
+    private void GetData() {
+        client.SearchArtists("ColdPlay");
+    }
+}
