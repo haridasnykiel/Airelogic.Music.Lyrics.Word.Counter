@@ -6,22 +6,23 @@
 
 <div class="input-group mb-3"> 
     <div class="input-group-prepend">
-        <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetData">Find Artists</button>
+        <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetArtist">Find Artists</button>
     </div>
     <input type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @bind="ArtistName"/>
 </div>
 
 
 <div>
-    <p class="alert alert-light" >@Artist.Id</p>
-    <p class="alert alert-light" >@Artist.Name</p>
+    @if(Artist != null) {
+        <h5 class="alert alert-dark" >@Artist.Name</h5> 
+    }
 </div>
 
 @code {
     private MusicApiClient client = new MusicApiClient();
     private string ArtistName { get; set; }
     private Artist Artist { get; set; }
-    private async Task GetData() {
-        Artist =  await client.SearchArtistAsync(ArtistName);
+    private async Task GetArtist() {
+        Artist =  await client.GetArtistAsync(ArtistName);
     }
 }

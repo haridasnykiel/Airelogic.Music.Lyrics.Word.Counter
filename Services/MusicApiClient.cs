@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,12 +25,12 @@ namespace Music.Lyrics.Word.Counter.Services
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<Artist> SearchArtistAsync(string artistName)
+        public async Task<Artist> GetArtistAsync(string artistName)
         {
-            var artistData = await client.GetAsync("artist/cc197bad-dc9c-440d-a5b5-d52ba2e14234");
+            var artistData = await client.GetAsync($"artist/?query=artist:{artistName}");
             var stream = await artistData.Content.ReadAsStreamAsync();
-            var artist = await JsonSerializer.DeserializeAsync<Artist>(stream);
-            return artist;
+            var artistList = await JsonSerializer.DeserializeAsync<ArtistList>(stream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return artistList.Artists[0];
         }
     }
 }
