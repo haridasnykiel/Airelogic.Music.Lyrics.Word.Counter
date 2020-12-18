@@ -1,28 +1,27 @@
 ﻿@page "/"
 @using Music.Lyrics.Word.Counter.Services
+@using Music.Lyrics.Word.Counter.Models
 
-<h5><span class="d-block p-2 text-dark">Average Song Word Count By Artist Name</span></h5>
+<h5><span class="d-block p-2 text-dark">Average Lyrics Word Count</span></h5>
 
 <div class="input-group mb-3"> 
     <div class="input-group-prepend">
         <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetData">Find Artists</button>
     </div>
-    <input type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @onclick="GetData"/>
+    <input type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @bind="ArtistName"/>
 </div>
 
 
 <div>
-    <p class="alert alert-light" >@ArtistData</p>
+    <p class="alert alert-light" >@Artist.Id</p>
+    <p class="alert alert-light" >@Artist.Name</p>
 </div>
 
 @code {
     private MusicApiClient client = new MusicApiClient();
-
-
-
-    private string ArtistData { get; set; }
-
+    private string ArtistName { get; set; }
+    private Artist Artist { get; set; }
     private async Task GetData() {
-        ArtistData =  await client.SearchArtistDataAsync("");
+        Artist =  await client.SearchArtistAsync(ArtistName);
     }
 }
