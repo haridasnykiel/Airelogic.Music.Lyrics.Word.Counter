@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace Music.Lyrics.Word.Counter.Models
 {
-    public class ArtistList
+    public class ArtistsResponse
     {
-        public int Count { get; set; }
         public List<Artist> Artists { get; set; }
     }
 }
