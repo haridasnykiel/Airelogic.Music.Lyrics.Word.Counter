@@ -2,7 +2,7 @@
 @using Music.Lyrics.Word.Counter.Services
 @using Music.Lyrics.Word.Counter.Models
 @using Music.Lyrics.Word.Counter.Components
-@inject IMusicApiClient client
+@inject IMusicInfoApiClient client
 
 <h5><span class="d-block p-2 text-dark">Average Lyrics Word Count</span></h5>
 
@@ -18,7 +18,7 @@
     @if(Artist != null) 
     {
         <h5 class="alert alert-dark">Artist @Artist.Name has been found</h5> 
-        <WorksDetails ArtistId="@Artist.Id"/>
+        <SongsDetails Artist="@Artist"/>
     }
 </div>
 

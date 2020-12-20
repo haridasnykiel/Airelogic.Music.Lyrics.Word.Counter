@@ -1,0 +1,38 @@
+@using Music.Lyrics.Word.Counter.Services
+@using Music.Lyrics.Word.Counter.Models
+@inject ISongHandler songHandler
+
+@if (Songs == null)
+{
+    <div class="alert alert-info">Loading @Artist.Name Songs....</div>
+}
+else if(!IsSongsLoaded)
+{
+    <div class="alert alert-info">Number of Songs found: @Songs.Count</div>
+
+    @foreach (var song in Songs)
+    {
+        <div class="alert alert-dark">
+            @song.Title
+            Lyrics Count: @_lyricsHandler.LyricsCount(song.Lyrics);
+        </div>
+    }
+} 
+else 
+{
+    <div class="alert alert-danger">@Artist.Name failed to load.</div>
+}
+
+@code {
+    private ILyricsHandler _lyricsHandler = new LyricsHandler();
+
+    [Parameter]
+    public Artist Artist { get; set; }
+    private List<Song> Songs { get; set; }
+    private bool IsSongsLoaded => Songs?.Count == 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Songs = await songHandler.GetSongsAsync(Artist);
+    }
+}

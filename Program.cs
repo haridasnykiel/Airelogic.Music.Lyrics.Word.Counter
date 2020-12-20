@@ -19,17 +19,24 @@ namespace Music.Lyrics.Word.Counter
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            var client = new HttpClient
+            var musicBrainzClient = new HttpClient
             {
-                BaseAddress = new Uri("https://musicbrainz.org/ws/2/")
+                BaseAddress = new Uri("https://musicbrainz.org/ws/2/"),
             };
-            client.DefaultRequestHeaders
-                .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            IMusicApiClient musicClient = new MusicApiClient(client);
- 
+            musicBrainzClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            IMusicInfoApiClient musicClient = new MusicInfoApiClient(musicBrainzClient);
             builder.Services.AddScoped(sp => musicClient);
+
+            var lyricsOvhClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://api.lyrics.ovh/v1/"),
+            };
+            lyricsOvhClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            ILyricsApiClient lyricsClient = new LyricsApiClient(lyricsOvhClient);
+            builder.Services.AddScoped(sp => lyricsClient);
+
+            ISongHandler songHandler = new SongHandler(musicClient, lyricsClient);
+            builder.Services.AddScoped(sp => songHandler);
 
             await builder.Build().RunAsync();
         }
