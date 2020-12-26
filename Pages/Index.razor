@@ -26,6 +26,7 @@
     private string ArtistName { get; set; }
     private Artist Artist { get; set; }
     private async Task GetArtist() {
+        Artist = null;
         Artist =  await client.GetArtistAsync(ArtistName);
     }
 }

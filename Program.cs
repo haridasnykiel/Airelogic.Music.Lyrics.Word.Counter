@@ -38,6 +38,9 @@ namespace Music.Lyrics.Word.Counter
             ISongHandler songHandler = new SongHandler(musicClient, lyricsClient);
             builder.Services.AddScoped(sp => songHandler);
 
+            ILyricsHandler lyricsHandler = new LyricsHandler();
+            builder.Services.AddScoped(sp => lyricsHandler);
+
             await builder.Build().RunAsync();
         }
     }
