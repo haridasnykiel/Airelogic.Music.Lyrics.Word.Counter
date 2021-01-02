@@ -4,11 +4,11 @@
 @using Music.Lyrics.Word.Counter.Components
 @inject IMusicInfoApiClient client
 
-<h5><span class="d-block p-2 text-dark">Average Lyrics Word Count</span></h5>
+<h5><span class="d-block p-2 text-dark">Enter Artist Name Below</span></h5>
 
 <div class="input-group mb-3"> 
     <div class="input-group-prepend">
-        <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetArtist">Find Artists</button>
+        <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetArtist">Find</button>
     </div>
     <input type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @bind="ArtistName"/>
 </div>
@@ -18,7 +18,7 @@
     @if(Artist != null) 
     {
         <h5 class="alert alert-dark">Artist @Artist.Name has been found</h5> 
-        <SongsDetails Artist="@Artist"/>
+        <LyricsDetails Artist="@Artist"/>
     }
 </div>
 

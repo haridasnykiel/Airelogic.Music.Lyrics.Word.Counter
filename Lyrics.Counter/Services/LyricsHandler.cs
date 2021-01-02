@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Music.Lyrics.Word.Counter.Extensions;
 using Music.Lyrics.Word.Counter.Models;
 
 namespace Music.Lyrics.Word.Counter.Services
@@ -10,7 +11,8 @@ namespace Music.Lyrics.Word.Counter.Services
         {
             return songs
                 .Select(s => GetSongWordCount(s.Lyrics))
-                .Average();
+                .Average()
+                .Truncate(decimals: 2);
         }
 
         private int GetSongWordCount(string lyrics)
