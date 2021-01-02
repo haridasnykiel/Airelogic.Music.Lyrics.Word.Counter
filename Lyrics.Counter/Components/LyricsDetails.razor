@@ -27,6 +27,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Songs = await songHandler.GetSongsAsync(Artist);
+        var works = await songHandler.GetArtistWorksAsync(Artist.Id);
+        var songs = await songHandler.GetAllSongLyrics(Artist.Name, works.Works);
+        Songs = songs.ToList();
     }
 }

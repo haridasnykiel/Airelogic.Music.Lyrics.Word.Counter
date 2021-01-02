@@ -6,6 +6,7 @@ namespace Music.Lyrics.Word.Counter.Services
 {
     public interface ISongHandler
     {
-        Task<List<Song>> GetSongsAsync(Artist artist);
+        Task<WorksResponse> GetArtistWorksAsync(string artistId);
+        Task<IEnumerable<Song>> GetAllSongLyrics(string artistName, IEnumerable<Work> workBatch);
     }
 }
