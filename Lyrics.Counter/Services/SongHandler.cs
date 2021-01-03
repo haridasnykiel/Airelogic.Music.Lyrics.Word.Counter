@@ -19,39 +19,38 @@ namespace Music.Lyrics.Word.Counter.Services
         {
             int limit = 100;
             int offset = 0;
-            WorksResponse reponse = new WorksResponse();
+            WorksResponse response = new WorksResponse();
             WorksResponse worksBatch;
 
             do
             {
                 worksBatch = await _musicInfoClient.GetWorksAsync(artistId, limit, offset);
                 var allSongs = worksBatch.Works.Where(w => w.Type == "Song");
-                reponse.Works.AddRange(allSongs);
+                response.Works.AddRange(allSongs);
                 offset += limit;
             } while (worksBatch.Works.Count == limit);
 
-            return reponse;
+            return response;
         }
 
 
-        public async Task<IEnumerable<Song>> GetAllSongLyrics(string artistName, IEnumerable<Work> works)
+        public async Task<IEnumerable<Song>> GetAllSongLyricsAsync(string artistName, IEnumerable<Work> works)
         {
-            var songsTasks = new List<Task<Song>>();
+            var songTasks = new List<Task<Song>>();
 
             foreach (var work in works)
             {
-                var task = GetSongLyrics(artistName, work);
-                songsTasks.Add(task);
+                var task = GetSongLyricsAsync(artistName, work);
+                songTasks.Add(task);
             }
 
-            var songs = await Task.WhenAll(songsTasks);
+            var songs = await Task.WhenAll(songTasks);
 
             return songs.Where(s => s != null);
         }
 
-        private async Task<Song> GetSongLyrics(string artistName, Work work)
+        private async Task<Song> GetSongLyricsAsync(string artistName, Work work)
         {
-
             var lyrics = await _lyricsApiClient.GetLyricsAsync(artistName, work.Title);
 
             if (lyrics == null)
