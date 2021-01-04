@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Lyrics.Counter.Tests.TestData;
 using Moq;
 using Music.Lyrics.Word.Counter.Models;
 using Music.Lyrics.Word.Counter.Services;
@@ -14,27 +13,7 @@ namespace Lyrics.Counter.Tests
         Mock<IMusicInfoApiClient> _musicInfoClientMock;
         Mock<ILyricsApiClient> _lyricsApiClientMock;
         ISongHandler _sut;
-        private WorksResponse worksResponseTestData = new WorksResponse
-        {
-            Works = new List<Work>
-            {
-                new Work {
-                    Id = Guid.NewGuid().ToString(),
-                    Type = "",
-                    Title = "AlbumOne"
-                },
-                new Work {
-                    Id = Guid.NewGuid().ToString(),
-                    Type = "Song",
-                    Title = "SongOne"
-                },
-                new Work {
-                    Id = Guid.NewGuid().ToString(),
-                    Type = "Song",
-                    Title = "SongTwo"
-                }
-            }
-        };
+        
 
         [SetUp]
         public void SetupMocks() 
@@ -48,26 +27,38 @@ namespace Lyrics.Counter.Tests
         public async Task GetArtistWorksAsync_ReturnsArtistSongs_IsValidArtistId()
         {
             var artistId = "1234";
-            var testData = Task.Factory.StartNew(() => { return worksResponseTestData; });
+            var testData = Task.Factory.StartNew(() => { return WorksResponseTestData.ThreeWorksResponse(); });
             _musicInfoClientMock.Setup(musicInfoApiClient => musicInfoApiClient.GetWorksAsync(artistId, It.IsAny<int>(), It.IsAny<int>())).Returns(testData);
             
-            var works = await _sut.GetArtistWorksAsync(artistId);
+            var results = await _sut.GetArtistWorksAsync(artistId);
 
-            works.Works.Count.Should().Be(2);
-            works.Works[0].Title.Should().Be("SongOne");
-            works.Works[1].Title.Should().Be("SongTwo");
+            results.Works.Count.Should().Be(2);
+            results.Works[0].Title.Should().Be("SongOne");
+            results.Works[1].Title.Should().Be("SongTwo");
         }
 
         [Test]
         public async Task GetArtistWorksAsync_ReturnsNoSongs_IsInvalidArtistId()
         {
             var artistId = "4324";
-            var testData = Task.Factory.StartNew(() => { return worksResponseTestData; });
-            _musicInfoClientMock.Setup(musicInfoApiClient => musicInfoApiClient.GetWorksAsync("1234", It.IsAny<int>(), It.IsAny<int>())).Returns(testData);
+            var emptyResponse = Task.Factory.StartNew(() => { return new WorksResponse(); });
+            _musicInfoClientMock.Setup(musicInfoApiClient => musicInfoApiClient.GetWorksAsync(artistId, It.IsAny<int>(), It.IsAny<int>())).Returns(emptyResponse);
 
-            var works = await _sut.GetArtistWorksAsync(artistId);
+            var results = await _sut.GetArtistWorksAsync(artistId);
 
-            works.Works.Should().BeEmpty();
+            results.Works.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task GetAllSongLyricsAsync_ReturnsLyrics_ValidArtistNameAndSongs()
+        {
+            var artistName = "artistName";
+            var testData = Task.Factory.StartNew(() => { return WorksResponseTestData.FourWorksResponseAllSongs(); });
+            //_lyricsApiClientMock.Setup(lyricsApiClient => lyricsApiClient.GetLyricsAsync(artistName, It.IsAny<string>())).Returns(testData);
+
+            var results = await _sut.GetAllSongLyricsAsync(artistName, WorksResponseTestData.FourWorksResponseAllSongs().Works);
+
+           // results.Works.Should().BeEmpty();
         }
     }
 }
