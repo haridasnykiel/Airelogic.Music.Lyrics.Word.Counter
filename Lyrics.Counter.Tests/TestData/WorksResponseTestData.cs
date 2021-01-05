@@ -35,7 +35,7 @@ namespace Lyrics.Counter.Tests.TestData
             };
         }
 
-        public static WorksResponse FourWorksResponseAllSongs ()
+        public static WorksResponse FourSongsResponse ()
         {
 
             return new WorksResponse

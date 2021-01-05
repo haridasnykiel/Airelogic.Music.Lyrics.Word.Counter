@@ -12,7 +12,7 @@ namespace Music.Lyrics.Word.Counter.Services
             return songs
                 .Select(s => GetSongWordCount(s.Lyrics))
                 .Average()
-                .Truncate(decimals: 2);
+                .Truncate(decimals: 0);
         }
 
         private int GetSongWordCount(string lyrics)
