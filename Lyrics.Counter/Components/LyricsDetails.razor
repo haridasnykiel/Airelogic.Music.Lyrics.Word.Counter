@@ -11,7 +11,10 @@ else if(IsSongsLoaded)
 {
     <div class="alert alert-info">Number of Songs found: @Songs.Count</div>
     <div class="alert alert-success">
-        Lyrics Average: @lyricsHandler.GetLyricsAverage(Songs)
+        <div class="result">Lyrics Average: @lyricsHandler.GetLyricsAverage(Songs)</div>
+        <div class="result">Maximum Lyrics: @lyricsHandler.GetMaximumLyrics(Songs)</div>
+        <div class="result">Minimum Lyrics: @lyricsHandler.GetMinimumLyrics(Songs)</div>
+        <div class="result">Standard Deviation of Lyrics: @lyricsHandler.GetStandardDeviationOfLyrics(Songs)</div>
     </div>
 } 
 else 

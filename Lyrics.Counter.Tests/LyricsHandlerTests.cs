@@ -20,5 +20,35 @@ namespace Lyrics.Counter.Tests
 
             result.Should().Be(5);
         }
+
+        [Test]
+        public void GetMaximumLyricsNumber_WithFiveSongs() 
+        {
+            var songs = SongsTestData.FiveSongs();
+            
+            var result = _sut.GetMaximumLyrics(songs);
+
+            result.Should().Be(8);
+        }
+
+        [Test]
+        public void GetMinimumLyricsNumber_WithFiveSongs() 
+        {
+            var songs = SongsTestData.FiveSongs();
+            
+            var result = _sut.GetMinimumLyrics(songs);
+
+            result.Should().Be(2);
+        }
+
+        [Test]
+        public void GetStandardDeviationOfLyrics_WithFiveSongs() 
+        {
+            var songs = SongsTestData.FiveSongs();
+            
+            var result = _sut.GetStandardDeviationOfLyrics(songs);
+
+            result.Should().Be(2.28);
+        }
     }
 }

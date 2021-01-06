@@ -6,31 +6,43 @@
 
 <h5><span class="d-block p-2 text-dark">Enter Artist Name Below</span></h5>
 
-<div class="input-group mb-3"> 
-    <div class="input-group-prepend">
-        <button class="input-group-text btn btn-primary" id="basic-addon1" @onclick="GetArtist">Find</button>
+<EditForm Model="@request" OnValidSubmit="@GetArtist">
+    <DataAnnotationsValidator />
+    <div class="input-group mb-3"> 
+        <div class="input-group-prepend">
+            <button type="submit" class="input-group-text btn btn-primary" id="basic-addon1">Find</button>
+        </div>
+        <InputText type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @bind-Value="@request.Name"/>
     </div>
-    <input type="text" class="form-control" placeholder="Artist Name" aria-label="Artist Name" aria-describedby="basic-addon1" @bind="ArtistName"/>
-</div>
+    <ValidationSummary />
+</EditForm>
+
 
 
 <div>
-    @if(Artist != null) 
+
+    @if(!IsArtistFound && IsEnterSelected) 
+    {
+        <h5 class="alert alert-danger">Artist @request.Name has not been found</h5> 
+    }
+    
+    @if(IsArtistFound) 
     {
         <h5 class="alert alert-dark">Artist @Artist.Name has been found</h5> 
         <LyricsDetails Artist="@Artist"/>
     } 
-    else 
-    {
-        <h5 class="alert alert-dark">Looking for @ArtistName ....</h5> 
-    }
 </div>
 
 @code {
-    private string ArtistName { get; set; }
-    private Artist Artist { get; set; }
+    private ArtistRequest request = new ArtistRequest();
+    private bool IsArtistFound => !string.IsNullOrEmpty(Artist.Id);
+    private bool IsEnterSelected { get; set; } = false;
+    private Artist Artist { get; set; } = new Artist();
+    
     private async Task GetArtist() {
-        Artist = null;
-        Artist =  await client.GetArtistAsync(ArtistName);
+        IsEnterSelected = true;
+        Artist = new Artist();
+        var artist = await client.GetArtistAsync(request.Name);
+        Artist = artist ?? new Artist();
     }
 }
